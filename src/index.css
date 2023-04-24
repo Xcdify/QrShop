@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*
+{
+  box-sizing: border-box;
+
+
+}
+
+
+.camera{
+  width: 100px;
+  height: 200px;
+  z-index: 0;
+}
+
+.z-1{
+  z-index: 1;
+}
+.z-2{
+  z-index: 2;
+}
+.z-3{
+  z-index: 3;
+}
+.z-4{
+  z-index: 4;
+}
+
+a:link { text-decoration: none; }
+
+
+a:visited { text-decoration: none; }
+
+
+a:hover { text-decoration: none; }
+
+
+a:active { text-decoration: none; }
+
+.flex-direction-column{flex-direction:column;}
+
+.bg-darkblue{
+  background-color: darkblue;
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+.view-more{
+  width: 20%;
+}
+
+.mw-75{
+  max-width: 75%;
+}
+
+.overflow-visable{
+  overflow: visible
+}
+
+.mw-50{
+  max-width: 50%;
+}
+.mw-25{
+  max-width: 25%;
+}
+
+.w-33{
+  width: 33%;
+}
+
+.w-30{
+  width: 30%;
+}
+
+.w-45{
+  width: 45%;
+}
+.product-container{
+  position: relative;
+}
+.inventory-text{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ff7900;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  padding: 3px;
+  line-height: 15px;
+}
+
+.font-weight-bold{
+  font-weight: bold;
+}
+
+.bg-red{
+  background-color: red;
+}
+
+.bg-orange{
+  background-color: orange;
+}
+
+.bg-yellow{
+  background-color: yellow;
+}
+
+.bg-green{
+  background-color: green;
+}
+
+.bg-blue{
+  background-color: blue;
+}
+
+.bg-indigo{
+  background-color: indigo;
+}
+
+.bg-violet{
+  background-color: violet;
+}
+
+
+@media screen and ( width <= 769px){
+  .w-sm-45{
+    width: 45%;
+  }
+  .w-sm-100{
+    width: 100%;
+  }
+  .flex-direction-column-sm{flex-direction:column;}
+  .view-more{
+    width: 100%;
+  }
+  
+}

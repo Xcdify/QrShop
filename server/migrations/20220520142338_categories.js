@@ -1,0 +1,20 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.up = async knex => {
+  await knex.schema.createTable('categories', tbl =>{
+      tbl.increments();
+      tbl.text('catName');
+      tbl.text('catDesc');
+      tbl.text('color');
+  })
+};
+
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.down = async knex => {
+  await knex.schema.dropTableIfExists('categories');
+};
