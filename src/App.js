@@ -179,7 +179,7 @@ function App() {
             <div>
               <Navbar />
               {/* {displayCats(JSON.parse(sessionStorage.getItem("testArr")))} */}
-              <Category2 category={"Supplements"} />
+              {products && products.length > 0 && <Category2 category={"Supplements"} />}
               <Footer />
             </div>
 
