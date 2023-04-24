@@ -178,7 +178,8 @@ function App() {
           <Route exact path="/" element={
             <div>
               <Navbar />
-              {displayCats(JSON.parse(sessionStorage.getItem("testArr")))}
+              {/* {displayCats(JSON.parse(sessionStorage.getItem("testArr")))} */}
+              <Category2 category={"Supplements"} />
               <Footer />
             </div>
 

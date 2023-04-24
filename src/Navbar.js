@@ -39,7 +39,7 @@ function Navbar() {
         <div className='flex justify-content-between' style={{ height: "80px" }} >
           <div className="flex justify-content-center align-items-center" >
             <Link to='/' className="text-black">
-              <h2 className="mx-10">Fitness Store</h2>
+              <h2 className="text-primary-100 mx-10">Orange Shop</h2>
             </Link>
           </div>
           <div className="flex w-25 align-items-center justify-content-center flex-direction-column">
