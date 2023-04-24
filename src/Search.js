@@ -10,23 +10,23 @@ function Search() {
 
     const [result, setResults] = useState([]);
 
-    useEffect(() => {
-        if (products) {
-            let tempArr = []
-            for (var i = 0; i < products.length; i++) {
-                for (var j = 0; j <= products[i].prodName.length - search.length; j++) {
-                    let temp = products[i].prodName.substring(j, j + search.length)
-                    if (temp.toLowerCase() === search.toLowerCase()) {
-                        tempArr.push({ name: products[i].prodName, id: products[i].id, prodCat: products[i].prodCat })
-                        break
-                    }
-                }
-            }
-            setResults(tempArr)
-            document.getElementById('search-results').classList.remove('d-none')
-        }
+    // useEffect(() => {
+    //     if (products) {
+    //         let tempArr = []
+    //         for (var i = 0; i < products.length; i++) {
+    //             for (var j = 0; j <= products[i].prodName.length - search.length; j++) {
+    //                 let temp = products[i].prodName.substring(j, j + search.length)
+    //                 if (temp.toLowerCase() === search.toLowerCase()) {
+    //                     tempArr.push({ name: products[i].prodName, id: products[i].id, prodCat: products[i].prodCat })
+    //                     break
+    //                 }
+    //             }
+    //         }
+    //         setResults(tempArr)
+    //         document.getElementById('search-results').classList.remove('d-none')
+    //     }
 
-    }, [search])
+    // }, [search])
 
 
     const displaySearch = (results) => {
@@ -40,17 +40,17 @@ function Search() {
         return (output)
     }
 
-    useEffect(() => {
-        window.onclick = function (e) {
-            if (!(e.target.id === 'mySearch') && !(e.target.id === "search-results")) {
-                var mySearch = document.getElementById("search-results");
-                if (!mySearch.classList.contains('d-none')) {
-                    mySearch.classList.add('d-none');
-                }
-            }
-        }
+    // useEffect(() => {
+    //     window.onclick = function (e) {
+    //         if (!(e.target.id === 'mySearch') && !(e.target.id === "search-results")) {
+    //             var mySearch = document.getElementById("search-results");
+    //             if (!mySearch.classList.contains('d-none')) {
+    //                 mySearch.classList.add('d-none');
+    //             }
+    //         }
+    //     }
 
-    })
+    // })
 
 
     return (
