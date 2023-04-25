@@ -136,8 +136,8 @@ function Category2({ category }) {
 
     return (
 
-        <>
-            <div className="container w-full mx-auto">
+        <div className="mr-48">
+            <div className="container  w-full mx-auto">
                 <div className="w-100 flex flex-wrap justify-center align-items-center mb-10 ps-3">
                     <span className="text-primary-100" >Filter by :</span>
                     <select className="border-1 text-primary-100 border-primary-100 p-2 rounded w-25 m-2" aria-label="Default select example" onChange={(e)=>handleChange(e)} value={filter < 3 ? filter : "0"}>
@@ -163,7 +163,7 @@ function Category2({ category }) {
                 </div>
 
             </div>
-        </>
+        </div>
     )
 }
 

@@ -34,7 +34,7 @@ function Navbar() {
   var cart = sessionStorage.getItem("myCart");
 
   return (
-    <div className="bg-light mb-10">
+    <div className="bg-light mr-48 mb-10">
       <div className="container">
         <div className='flex justify-content-between' style={{ height: "80px" }} >
           <div className="flex justify-content-center align-items-center" >
@@ -46,10 +46,10 @@ function Navbar() {
             <Search />
           </div>
           <div className="flex align-items-center justify-content-center">
-            <img src={caddyBlack} className="flex w-10 h-10"/>
+            {/* <img src={caddyBlack} className="flex w-10 h-10"/>
             <div className="flex flex-direction-column justify-content-center align-items-center pe-5">
               <Link to="/cart" className="border-2 text-black p-2 px-4 w-100">{displayCart()}</Link>
-            </div>
+            </div> */}
           </div>
           <p className="text-center" id="status"> </p>
         </div>

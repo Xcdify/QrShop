@@ -5,6 +5,7 @@ import {
   RiStarLine
 } from "react-icons/ri";
 import axios from "axios";
+import SideCart from './SideCart'
 
 function ProductPage({ id, name, desc, price, img, inventory, catName }) {
 
@@ -15,6 +16,9 @@ function ProductPage({ id, name, desc, price, img, inventory, catName }) {
     const params = new URLSearchParams(search);
     const fromQr = params.get('fromQr');
     setFromQr(fromQr)
+    if(fromQr == "true"){
+      handleCart("once");
+    }
   }, [])
 
   function displayImg(data) {
@@ -26,12 +30,14 @@ function ProductPage({ id, name, desc, price, img, inventory, catName }) {
     var cart = JSON.parse(sessionStorage.getItem("myCart"));
   }
 
-  const handleCart = async () => {
+  const handleCart = async (type) => {
     if (cart.length > 0) {
       for (var i = 0; i < cart.length; i++) {
         if (cart[i].productId === id) {
-          cart[i].amount++
-          break
+          if(type !== "once"){
+            cart[i].amount++
+            break
+          }
         } else {
           var cartItem = {
             productId: id,
@@ -45,7 +51,6 @@ function ProductPage({ id, name, desc, price, img, inventory, catName }) {
 
         }
       }
-
     } else {
       var cartItem = {
         productId: id,
@@ -56,11 +61,10 @@ function ProductPage({ id, name, desc, price, img, inventory, catName }) {
       }
       cart.push(cartItem)
     }
-
-
-    alert('Item Added to Cart')
-    window.location.reload()
     sessionStorage.setItem("myCart", JSON.stringify(cart));
+    if(type !== "once"){
+      window.location.reload()
+    }
   }
 
   function getCart() {
@@ -81,10 +85,10 @@ function ProductPage({ id, name, desc, price, img, inventory, catName }) {
   }
 
   return (
-    <>
+    <div className='mr-48'>
 
-      <div className='d-flex'>
-        <div className=" w-100 d-flex flex-direction-column-sm justify-content-center align-items-center">
+      <div className='flex'>
+        <div className=" w-3/4 flex flex-direction-column-sm justify-content-center align-items-center">
           <div className="w-md-50 w-100 p-5">
             {displayImg(img)}
           </div>
@@ -108,8 +112,10 @@ function ProductPage({ id, name, desc, price, img, inventory, catName }) {
             </div>
           </div>
         </div>
+
+        {cart && <SideCart/>}
       </div>
-    </>
+    </div>
   );
 }
 

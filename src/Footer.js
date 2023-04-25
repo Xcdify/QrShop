@@ -16,11 +16,10 @@ function Footer(){
     }
 
     return(
-        <>
+        <div className="mr-48">
         <div className="none block justify-center align-center align-items-center border-1 bg-light mt-5 flex h-60">
             <div className="w-25 text-center pt-3">
                 <h3>Organization</h3>
-               
             </div>
 
             <div className="w-25 text-center pt-3">
@@ -75,7 +74,7 @@ function Footer(){
         
         
         
-        </>
+        </div>
     )
 }
 

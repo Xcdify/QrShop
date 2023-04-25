@@ -20,6 +20,7 @@ import Editcatsingle from "./Editcatsingle";
 import Editprod from "./Editprod";
 import Editprodsingle from "./Editprodsingle";
 import Cart from "./Cart";
+import SideCart from './SideCart'
 
 
 function App() {
@@ -181,6 +182,7 @@ function App() {
               {/* {displayCats(JSON.parse(sessionStorage.getItem("testArr")))} */}
               {products && products.length > 0 && <Category2 category={"OrangeMerchandise"} />}
               <Footer />
+              <SideCart/>
             </div>
 
           } />
@@ -197,28 +199,21 @@ function App() {
               <Addcat />
             </>
           } />
-
-
           <Route exact path='/backend/add-product' element={
             <>
               <Addproduct />
             </>
           } />
-
-
-
           <Route exact path='/backend/edit-cat' element={
             <>
               <Editcat />
             </>
           } />
-
           <Route exact path='/backend/edit-prod' element={
             <>
               <Editprod />
             </>
           } />
-
           <Route exact path="/cart" element={
             <>
               <Navbar />
