@@ -16,23 +16,6 @@ function Navbar() {
     }
   }
 
-  function displayCart() {
-    if (cart) {
-      var sum = 0;
-      var cartArr = JSON.parse(cart)
-      for (var i = 0; i < cartArr.length; i++) {
-        sum = sum + cartArr[i].amount
-
-      }
-      return sum
-    }
-    else {
-      return '0'
-    }
-  }
-
-  var cart = sessionStorage.getItem("myCart");
-
   return (
     <div className="bg-light mr-48 mb-10">
       <div className="container">

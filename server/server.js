@@ -254,7 +254,6 @@ server.put('/updateProdNoImg/:id', async (req, res) => {
     }
 })
 
-
 server.delete('/deleteCat/:id', async (req, res) => {
     // Delete a category
     const { id } = req.params
@@ -279,6 +278,120 @@ server.delete('/deleteProd/:id', async (req, res) => {
     }
 })
 
+server.get('/getCart', async (req, res) => {
+    // Get all carts
+    try {
+        const carts = await db('carts')
+        res.status(200).json(carts)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+server.get('/cart/:id', async (req, res) => {
+    const { id } = req.params
+    try {
+        const cart = await db('carts').where({ id }).first()
+        const cartProducts = await db('cart_products').where({ 'cartId': cart.id })
+        cart.products = await Promise.all(cartProducts.map( async (product) => {
+            const productInfo = await db('products').where({ id: product.productId }).first()
+            return {
+                cartId: product.cartId,
+                productId: product.productId,
+                price: product.price,
+                quantity: product.quantity,
+                prodName: productInfo.prodName,
+                prodDesc: productInfo.prodDesc,
+                prodImg: productInfo.prodImg,
+                inventory: productInfo.inventory,
+            }
+        }))
+        res.status(200).json(cart)
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+server.post('/postCart', async (req, res) => {
+    // Post cart
+    const { products, subtotal } = req.body;
+    let cartId = null;
+    try {
+        const addCart = {
+            subtotal: subtotal
+        }
+        const newCart = await db('carts').insert(addCart)
+        if(newCart.length != 0){
+            cartId = newCart[0];
+            products.forEach(async(product)=> {
+                const addCartProduct = {
+                    cartId: cartId,
+                    productId: product.productId,
+                    price: product.price,
+                    quantity: product.quantity
+                }
+                await db('cart_products').insert(addCartProduct)
+            })
+        }
+        console.log(cartId)
+        if(cartId != null){
+            res.status(200).json({ cartId: cartId, server: 'Cart successfully added' })
+        }else{
+            res.error({ server: 'Cart not added' })
+        }
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+server.put('/cart/:id', async (req, res) => {
+    // Update a cart 
+    const { products, subtotal } = req.body;
+    try {
+        products.forEach(async(product)=> {
+            const cartProducts = await db('cart_products').where({ cartId: req.params.id, productId: product.productId })
+            if(cartProducts.length > 0){
+                const specificCartProducts = await db('cart_products').where({ cartId: req.params.id, productId: product.productId }).update({
+                    quantity: product.quantity
+                })
+            }else{
+                const addCartProduct = {
+                    cartId: req.params.id,
+                    productId: product.productId,
+                    price: product.price,
+                    quantity: product.quantity
+                }
+                await db('cart_products').insert(addCartProduct)
+            }
+        })
+        const specificCart = await db('carts').where({ id: req.params.id }).update({
+            subtotal: subtotal
+        })
+        specificCart === 0 ? res.status(404).json({ server: 'Cart not found' }) : res.status(200).json({ server: 'Cart successfully updated' })
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+server.delete('/cart/:cartId/product/:productId', async (req, res) => {
+    const { cartId, productId } = req.params
+    try {
+        await db('cart_products').where({ productId: productId }).del()
+        const cartProducts = await db('cart_products').where({ cartId: cartId })
+        const subtotal = cartProducts.reduce(function(_this, val) {
+            return _this + val.quantity*+val.price
+        }, 0);
+        await db('carts').where({ id: cartId }).update({
+            subtotal: subtotal
+        })
+        if(cartProducts.length == 0 ){
+            await db('carts').where({ id: cartId }).del()
+        }
+        res.status(200).json({ server: 'Cart successfully deleted' })
+    } catch (err) {
+        console.log(err)
+    }
+})
 
 
 server.listen(PORT, () => console.log('server is running at port: ' + PORT))
