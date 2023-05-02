@@ -4,8 +4,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
-
 } from "react-router-dom";
 
 import Navbar from './Navbar';
@@ -21,6 +19,7 @@ import Editprod from "./Editprod";
 import Editprodsingle from "./Editprodsingle";
 import Cart from "./Cart";
 import SideCart from './SideCart'
+import {apiUrl} from './helpers/index';
 
 
 function App() {
@@ -29,7 +28,7 @@ function App() {
   const [testArr, setTestArr] = useState(null)
   const getCats = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/getCat')
+      const response = await axios.get(`${apiUrl}/getCat`)
 
       setCats(response.data)
       sessionStorage.setItem("myCats", JSON.stringify(response.data))
@@ -40,7 +39,7 @@ function App() {
 
   const getCats1 = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/getCat')
+      const response = await axios.get(`${apiUrl}/getCat`)
       setTestArr(response.data)
       sessionStorage.setItem("testArr", JSON.stringify(response.data))
     } catch (err) {
@@ -69,7 +68,7 @@ function App() {
   const getProd = async () => {
     try {
 
-      const response = await axios.get('http://localhost:8000/getProd')
+      const response = await axios.get(`${apiUrl}/getProd`)
       setProducts(response.data)
       sessionStorage.setItem("myProds", JSON.stringify(response.data))
 

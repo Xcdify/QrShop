@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import {useNavigate} from "react-router-dom";
+import {apiUrl} from './helpers/index';
 
 function Editcatsingle({ id }) {
     const [cats, setCats] = useState(null)
@@ -13,7 +14,7 @@ function Editcatsingle({ id }) {
 
     const getCats = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/getCat/' + id)
+            const response = await axios.get(`${apiUrl}/getCat/` + id)
             setCats(response.data)
         } catch (err) {
             console.log(err)
@@ -41,7 +42,7 @@ function Editcatsingle({ id }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try{
-            await axios.put('http://localhost:8000/updateCat/' + id, { catName, catDesc, color})
+            await axios.put(`${apiUrl}/updateCat/` + id, { catName, catDesc, color})
             return navigate("/backend/edit-cat")
             
         }catch(err){
@@ -54,7 +55,7 @@ function Editcatsingle({ id }) {
 
         try{
 
-            await axios.delete('http://localhost:8000/deleteCat/' + id)
+            await axios.delete(`${apiUrl}/deleteCat/` + id)
             return navigate("/backend/edit-cat")
 
         }catch(err){

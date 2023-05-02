@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {apiUrl} from './helpers/index';
 
 function Editprod() {
     const [products, setProducts] = useState(null);
@@ -9,7 +10,7 @@ function Editprod() {
     const getProd = async () => {
         try {
 
-            const response = await axios.get('http://localhost:8000/getProd/')
+            const response = await axios.get(`${apiUrl}/getProd/`)
             console.log(response.data)
             setProducts(response.data)
         } catch (err) {

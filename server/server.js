@@ -1,7 +1,7 @@
 const express = require('express');
 
 const server = express();
-const PORT = 8000;
+const PORT = 8002;
 const helmet = require('helmet')
 const cors = require('cors')
 const db = require('./dbConfig')

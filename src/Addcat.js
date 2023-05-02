@@ -1,5 +1,6 @@
 import axios from "axios";
 import React,{useState} from "react";
+import {apiUrl} from './helpers/index';
 
 function Addcat() {
     const [catName, setCatName] = useState(null);
@@ -11,7 +12,7 @@ function Addcat() {
     
         try {
     
-            await axios.post('http://localhost:8000/postCat', { catName, catDesc, color})
+            await axios.post(`${apiUrl}/postCat`, { catName, catDesc, color})
           
     
         } catch (err) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import QRCode from "react-qr-code";
 import { useQRCode } from 'next-qrcode';
+import {apiUrl} from './helpers/index';
 
 function SideCart() {
       
@@ -21,7 +21,7 @@ function SideCart() {
             const cartId = await sessionStorage.getItem("cartId");
             if(cartId){
                 setCartId(cartId)
-                const response = await axios.get(`http://localhost:8000/cart/${cartId}`);
+                const response = await axios.get(`${apiUrl}/cart/${cartId}`);
                 setCart(response.data);
             }
           }
@@ -68,7 +68,7 @@ function SideCart() {
         try {
             const cartId = await sessionStorage.getItem("cartId");
             if(cartId){
-                await axios.delete(`http://localhost:8000/cart/${cartId}/product/${productId}`);
+                await axios.delete(`${apiUrl}/cart/${cartId}/product/${productId}`);
             }
         }
         catch (err) {

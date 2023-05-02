@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import {apiUrl} from './helpers/index';
 
 function Editprodsingle({ id }) {
     const [prodCat, setProdCat] = useState("loading ...");
@@ -19,7 +20,7 @@ function Editprodsingle({ id }) {
     const getProd = async () => {
         try {
 
-            const response = await axios.get('http://localhost:8000/getProd/' + id)
+            const response = await axios.get(`${apiUrl}/getProd/` + id)
             setProducts(response.data)
         } catch (err) {
             console.log(err)
@@ -45,7 +46,7 @@ function Editprodsingle({ id }) {
 
     const getCats = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/getCat')
+            const response = await axios.get(`${apiUrl}/getCat`)
             setCats(response.data)
         } catch (err) {
             console.log(err)
@@ -160,10 +161,10 @@ function Editprodsingle({ id }) {
     try {
         if(!(!new Uint32Array(canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.buffer).some(x => x !== 0))){
             var prodImg = canvas.toDataURL("image/jpeg", 0.5).split(',')[1]
-            await axios.put('http://localhost:8000/updateProdImg/'+id, { prodName, prodDesc, price,prodImg, prodCat })
+            await axios.put(`${apiUrl}/updateProdImg/`+id, { prodName, prodDesc, price,prodImg, prodCat })
         }else{
             var prodImg = prodImgs;
-            await axios.put('http://localhost:8000/updateProdNoImg/'+id, { prodName, prodDesc, price, prodCat })
+            await axios.put(`${apiUrl}/updateProdNoImg/`+id, { prodName, prodDesc, price, prodCat })
         }
 
     
@@ -181,7 +182,7 @@ function Editprodsingle({ id }) {
 
     try{
 
-        await axios.delete('http://localhost:8000/deleteProd/' + id)
+        await axios.delete(`${apiUrl}/deleteProd/` + id)
         return navigate("/backend/edit-prod")
 
     }catch(err){

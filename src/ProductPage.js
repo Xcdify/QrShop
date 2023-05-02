@@ -6,6 +6,7 @@ import {
 } from "react-icons/ri";
 import axios from "axios";
 import SideCart from './SideCart'
+import {apiUrl} from './helpers/index';
 
 function ProductPage({ id, name, desc, price, img, catName, inventory }) {
 
@@ -23,7 +24,7 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
         const cartId = await sessionStorage.getItem("cartId");
         if(cartId){
             setCartId(cartId);
-            const response = await axios.get(`http://localhost:8000/cart/${cartId}`);
+            const response = await axios.get(`${apiUrl}/cart/${cartId}`);
             setCart(response.data);
         }
       }
@@ -68,7 +69,7 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
       }
       try {
         cart.subtotal = getSum(cart.products)
-        let response = await axios.put(`http://localhost:8000/cart/${cartId}`, cart)
+        let response = await axios.put(`${apiUrl}/cart/${cartId}`, cart)
         console.log(response)
       }
       catch (err) {
@@ -86,7 +87,7 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
         subtotal: getSum(products)
       }
       try {
-        let response = await axios.post(`http://localhost:8000/postCart`, cart)
+        let response = await axios.post(`${apiUrl}/postCart`, cart)
         console.log(response)
         sessionStorage.setItem("cartId", response.data.cartId);
       }
@@ -111,7 +112,7 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
       inventory: inventory - 1
     }
     try {
-      await axios.put(`http://localhost:8000/updateProdInventory/${id}`, object)
+      await axios.put(`${apiUrl}/updateProdInventory/${id}`, object)
     }
     catch (err) {
       console.log(err)

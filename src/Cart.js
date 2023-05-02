@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {apiUrl} from './helpers/index';
 
 function Cart() {
     const [name, setName] = useState(null);
@@ -124,7 +125,7 @@ function Cart() {
             }
         
         try {
-            await axios.post('http://localhost:8000/postOrder', { name, code, adress, email, number, products })
+            await axios.post(`${apiUrl}/postOrder`, { name, code, adress, email, number, products })
         }
         catch (err) {
             console.log(err)

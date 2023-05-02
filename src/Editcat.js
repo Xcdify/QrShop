@@ -2,6 +2,7 @@
 import React, {useState,useEffect} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import {apiUrl} from './helpers/index';
 
 function Editcat(){
 
@@ -9,7 +10,7 @@ function Editcat(){
 
     const getCats = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/getCat')
+            const response = await axios.get(`${apiUrl}/getCat`)
             setCats(response.data)
         } catch (err) {
             console.log(err)

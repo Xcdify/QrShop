@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import {apiUrl} from './helpers/index';
 
 function Addproduct() {
   const [prodCat, setProdCat] = useState(null);
@@ -15,7 +16,7 @@ function Addproduct() {
 
   const getCats = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/getCat')
+      const response = await axios.get(`${apiUrl}/getCat`)
       setCats(response.data)
     } catch (err) {
       console.log(err)
@@ -41,7 +42,7 @@ function Addproduct() {
         alert('Please choose a category')
       } else {
         var prodImg = canvas.toDataURL("image/jpeg", 0.5).split(',')[1]
-        await axios.post('http://localhost:8000/postProd', { prodName, prodDesc, price, prodImg, prodCat })
+        await axios.post(`${apiUrl}/postProd`, { prodName, prodDesc, price, prodImg, prodCat })
       }
 
 
