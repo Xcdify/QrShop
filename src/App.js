@@ -19,70 +19,45 @@ import Editprod from "./Editprod";
 import Editprodsingle from "./Editprodsingle";
 import Cart from "./Cart";
 import SideCart from './SideCart'
-import {apiUrl} from './helpers/index';
+import { apiUrl } from './helpers/index';
 
 
-function App() {
+export function App() {
 
   const [cats, setCats] = useState(null)
+  const [products, setProducts] = useState(null);
   const [testArr, setTestArr] = useState(null)
+
+  useEffect(() => {
+    return () => getCats();
+  }, [])
+
+  useEffect(() => {
+    return () => getProd();
+  }, [])
+
+  
   const getCats = async () => {
     try {
       const response = await axios.get(`${apiUrl}/getCat`)
-
       setCats(response.data)
-      sessionStorage.setItem("myCats", JSON.stringify(response.data))
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const getCats1 = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/getCat`)
       setTestArr(response.data)
+      sessionStorage.setItem("myCats", JSON.stringify(response.data))
       sessionStorage.setItem("testArr", JSON.stringify(response.data))
     } catch (err) {
       console.log(err)
     }
   }
 
-  useEffect(() => {
-    if (!cats) {
-      getCats()
-    }
-
-  }, [cats])
-
-  useEffect(() => {
-    if (!testArr) {
-      getCats1()
-    }
-
-  }, [testArr])
-
-
-  const [products, setProducts] = useState(null);
-
-
   const getProd = async () => {
     try {
-
       const response = await axios.get(`${apiUrl}/getProd`)
       setProducts(response.data)
       sessionStorage.setItem("myProds", JSON.stringify(response.data))
-
-
     } catch (err) {
       console.log(err)
     }
   }
-
-  useEffect(() => {
-    if (!products) {
-      getProd()
-    }
-  }, [])
 
   function displayCats(arr) {
     if (arr) {
@@ -135,7 +110,6 @@ function App() {
     }
   }
 
-
   function displayLinksEditProd(prod) {
     if (prod) {
       const links = prod.map(({ id, prodName }, key) =>
@@ -155,15 +129,18 @@ function App() {
 
   function displayLinksProd(products) {
     if (products) {
-      const links = products.map(({ id, prodName, prodDesc, price, prodImg, prodCat, inventory }, key) =>
-        <Route key = {key} exact path={'/' + prodCat + '/' + prodName.replaceAll(' ', '%20') + id} element={
-          <>
-            <Navbar />
-            <ProductPage id={id} name={prodName} desc={prodDesc} price={price} img={prodImg} catName={prodCat} inventory={inventory}/>
-            <Footer />
-          </>
-        } />
-      )
+      const links = products.map(({ id, prodName, prodDesc, price, prodImg, prodCat, inventory }, key) => {
+        return (
+          <Route key={key} exact path={'/' + prodCat + '/' + prodName.replaceAll(' ', '%20') + id} element={
+            <>
+              <Navbar />
+              <ProductPage id={id} name={prodName} desc={prodDesc} price={price} img={prodImg} catName={prodCat} inventory={inventory} />
+              <Footer />
+              <SideCart />
+            </>
+          } />
+        )
+      })
       return (
         links
       )
@@ -172,7 +149,6 @@ function App() {
 
   return (
     <>
-
       <Router>
         <Routes>
           <Route exact path="/" element={
@@ -181,7 +157,7 @@ function App() {
               {/* {displayCats(JSON.parse(sessionStorage.getItem("testArr")))} */}
               {products && products.length > 0 && <Category2 category={"OrangeMerchandise"} />}
               <Footer />
-              <SideCart/>
+              <SideCart />
             </div>
 
           } />
@@ -223,13 +199,8 @@ function App() {
           } />
 
         </Routes>
-
-
-
       </Router>
 
     </>
   );
 }
-
-export default App;

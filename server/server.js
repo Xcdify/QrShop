@@ -291,22 +291,32 @@ server.get('/getCart', async (req, res) => {
 server.get('/cart/:id', async (req, res) => {
     const { id } = req.params
     try {
-        const cart = await db('carts').where({ id }).first()
-        const cartProducts = await db('cart_products').where({ 'cartId': cart.id })
-        cart.products = await Promise.all(cartProducts.map( async (product) => {
-            const productInfo = await db('products').where({ id: product.productId }).first()
-            return {
-                cartId: product.cartId,
-                productId: product.productId,
-                price: product.price,
-                quantity: product.quantity,
-                prodName: productInfo.prodName,
-                prodDesc: productInfo.prodDesc,
-                prodImg: productInfo.prodImg,
-                inventory: productInfo.inventory,
-            }
-        }))
-        res.status(200).json(cart)
+        const carts = await db('carts').where({ id })
+        if(carts.length > 0){
+            const cart = await db('carts').where({ id }).first();
+            const cartProducts = await db('cart_products').where({ 'cartId': cart.id })
+            cart.products = await Promise.all(cartProducts.map( async (product) => {
+                const productInfo = await db('products').where({ id: product.productId }).first()
+                return {
+                    cartId: product.cartId,
+                    productId: product.productId,
+                    price: product.price,
+                    quantity: product.quantity,
+                    prodName: productInfo.prodName,
+                    prodDesc: productInfo.prodDesc,
+                    prodImg: productInfo.prodImg,
+                    inventory: productInfo.inventory,
+                }
+            }))
+            res.status(200).json(cart)
+        }else{
+            res.status(200).json(
+                {
+                    products: [],
+                    subtotal: 0
+                }
+            )
+        }
     } catch (err) {
         console.log(err)
     }

@@ -129,7 +129,7 @@ function Category2({ category }) {
 
     const handleChange = (e) => {
         sessionStorage.setItem("filter", JSON.stringify(e.target.value))
-        window.location.reload()
+        //window.location.reload()
     }
 
 

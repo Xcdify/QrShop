@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {apiUrl} from './helpers/index';
+import { apiUrl } from './helpers/index';
 
 function Cart() {
     const [name, setName] = useState(null);
@@ -118,24 +118,24 @@ function Cart() {
             alert("It seems like you are offline. Please connect to the internet and try again")
             return
         } else {
-        
-            if(cart.length === 0){
+
+            if (cart.length === 0) {
                 alert("Your cart is empty please fill your cart with atleast 1 product to place an order")
                 return
             }
-        
-        try {
-            await axios.post(`${apiUrl}/postOrder`, { name, code, adress, email, number, products })
-        }
-        catch (err) {
-            console.log(err)
-        }
 
-        alert('Order has been placed. Payment will be sent to your email shortly')
+            try {
+                await axios.post(`${apiUrl}/postOrder`, { name, code, adress, email, number, products })
+            }
+            catch (err) {
+                console.log(err)
+            }
 
-        sessionStorage.setItem("myCart", JSON.stringify([]));
-        window.location.reload()
-    }
+            alert('Order has been placed. Payment will be sent to your email shortly')
+
+            sessionStorage.setItem("myCart", JSON.stringify([]));
+            //window.location.reload()
+        }
     }
 
 
@@ -209,7 +209,7 @@ function Cart() {
                     required
                 />
                 <input type="submit" className="form-control mt-4" value="Place Order" id="online" />
-                <button className="btn mt-4 d-none"  id="offline" > You are offline </button>
+                <button className="btn mt-4 d-none" id="offline" > You are offline </button>
             </form>
         </>
     )

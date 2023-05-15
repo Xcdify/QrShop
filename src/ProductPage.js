@@ -10,7 +10,10 @@ import {apiUrl} from './helpers/index';
 
 function ProductPage({ id, name, desc, price, img, catName, inventory }) {
 
-  const [fromQr, setFromQr] = useState(false);
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  const fromQrInfo = params.get('fromQr');
+  const [fromQr, setFromQr] = useState("false");
   const [cart, setCart] = useState({
     products: [],
     subtotal: 0
@@ -19,30 +22,27 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
   const [cartId, setCartId] = useState(null);
 
   useEffect(() => {
-    const setValues = async () => {
-      try {
-        const cartId = await sessionStorage.getItem("cartId");
-        if(cartId){
-            setCartId(cartId);
-            const response = await axios.get(`${apiUrl}/cart/${cartId}`);
-            setCart(response.data);
+    return () => {
+      const setValues = async () => {
+        try {
+          console.log(name, window.location.pathname)
+          const cartId = await sessionStorage.getItem("cartId");
+          if(cartId){
+              setCartId(cartId);
+              const response = await axios.get(`${apiUrl}/cart/${cartId}`);
+              setCart(response.data);
+          }
+          setFromQr(fromQrInfo)
+          if(fromQrInfo == "true"){
+            handleCart("once");
+          }
+        }
+        catch (err) {
+          console.log(err)
         }
       }
-      catch (err) {
-        console.log(err)
-      }
-    }
-    setValues();
-  }, [])
-
-  useEffect(() => {
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
-    const fromQr = params.get('fromQr');
-    setFromQr(fromQr)
-    if(fromQr == "true"){
-      handleCart("once");
-    }
+      setValues();
+    };
   }, [])
 
   function displayImg(data) {
@@ -147,8 +147,6 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
             </div>
           </div>
         </div>
-
-        {cart && <SideCart/>}
       </div>
     </div>
   );

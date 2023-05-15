@@ -16,21 +16,36 @@ function SideCart() {
     var products = '';
 
     useEffect(() => {
-        const setValues = async () => {
-          try {
-            const cartId = await sessionStorage.getItem("cartId");
-            if(cartId){
-                setCartId(cartId)
-                const response = await axios.get(`${apiUrl}/cart/${cartId}`);
-                setCart(response.data);
+        return () => {
+            const setValues = async () => {
+            try {
+                const cartId = await sessionStorage.getItem("cartId");
+                if(cartId){
+                    setCartId(cartId)
+                    const response = await axios.get(`${apiUrl}/cart/${cartId}`);
+                    setCart(response.data);
+                    if(response.data.products.length === 0){
+                        sessionStorage.removeItem("cartId")
+                        setCartId(null);
+                    }
+                }
             }
-          }
-          catch (err) {
-            console.log(err)
-          }
+            catch (err) {
+                console.log(err)
+            }
+            }
+            setValues();
         }
-        setValues();
       }, [])
+
+    const getCartData = async () => {
+        const response = await axios.get(`${apiUrl}/cart/${cartId}`);
+        setCart(response.data);
+        if(response.data.products.length === 0){
+            sessionStorage.removeItem("cartId")
+            setCartId(null);
+        }
+    }
 
     function displayImg(data) {
         return <img className="mw-100" width={50} height={50} alt="test" src={`data:image/png;base64,${data}`} />
@@ -67,8 +82,9 @@ function SideCart() {
     async function removeItem(productId) {
         try {
             const cartId = await sessionStorage.getItem("cartId");
-            if(cartId){
+            if(cartId && productId){
                 await axios.delete(`${apiUrl}/cart/${cartId}/product/${productId}`);
+                getCartData();
             }
         }
         catch (err) {
