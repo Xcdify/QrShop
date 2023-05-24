@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 function Search() {
 
 
-    var products = JSON.parse(sessionStorage.getItem("myProds"))
+    var products = JSON.parse(localStorage.getItem("myProds"))
     const [search, setSearch] = useState("")
 
 

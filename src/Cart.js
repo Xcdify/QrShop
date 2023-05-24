@@ -11,10 +11,10 @@ function Cart() {
     var products = '';
 
 
-    if (!(JSON.parse(sessionStorage.getItem("myCart")))) {
+    if (!(JSON.parse(localStorage.getItem("myCart")))) {
         cart = []
     } else {
-        var cart = JSON.parse(sessionStorage.getItem("myCart"));
+        var cart = JSON.parse(localStorage.getItem("myCart"));
     }
 
     function displayImg(data) {
@@ -25,7 +25,7 @@ function Cart() {
         for (var i = 0; i < cart.length; i++) {
             if (cart[i].productId === id) {
                 cart[i].amount++
-                sessionStorage.setItem("myCart", JSON.stringify(cart));
+                localStorage.setItem("myCart", JSON.stringify(cart));
                 break
             }
         }
@@ -45,7 +45,7 @@ function Cart() {
                 } else {
                     cart[i].amount--
                 }
-                sessionStorage.setItem("myCart", JSON.stringify(cart));
+                localStorage.setItem("myCart", JSON.stringify(cart));
                 break
             }
         }
@@ -59,7 +59,7 @@ function Cart() {
                 break
             }
         }
-        sessionStorage.setItem("myCart", JSON.stringify(cart));
+        localStorage.setItem("myCart", JSON.stringify(cart));
         window.location.reload()
     }
 
@@ -133,7 +133,7 @@ function Cart() {
 
             alert('Order has been placed. Payment will be sent to your email shortly')
 
-            sessionStorage.setItem("myCart", JSON.stringify([]));
+            localStorage.setItem("myCart", JSON.stringify([]));
             //window.location.reload()
         }
     }

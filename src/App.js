@@ -26,6 +26,7 @@ export function App() {
 
   const [cats, setCats] = useState(null)
   const [products, setProducts] = useState(null);
+  const [resetSideCartCheck, setResetSideCartCheck] = useState(false);
   const [testArr, setTestArr] = useState(null)
 
   useEffect(() => {
@@ -42,8 +43,8 @@ export function App() {
       const response = await axios.get(`${apiUrl}/getCat`)
       setCats(response.data)
       setTestArr(response.data)
-      sessionStorage.setItem("myCats", JSON.stringify(response.data))
-      sessionStorage.setItem("testArr", JSON.stringify(response.data))
+      localStorage.setItem("myCats", JSON.stringify(response.data))
+      localStorage.setItem("testArr", JSON.stringify(response.data))
     } catch (err) {
       console.log(err)
     }
@@ -53,7 +54,7 @@ export function App() {
     try {
       const response = await axios.get(`${apiUrl}/getProd`)
       setProducts(response.data)
-      sessionStorage.setItem("myProds", JSON.stringify(response.data))
+      localStorage.setItem("myProds", JSON.stringify(response.data))
     } catch (err) {
       console.log(err)
     }
@@ -127,6 +128,10 @@ export function App() {
     }
   }
 
+  const resetSideCart = () => {
+    setResetSideCartCheck(!resetSideCartCheck)
+  }
+
   function displayLinksProd(products) {
     if (products) {
       const links = products.map(({ id, prodName, prodDesc, price, prodImg, prodCat, inventory }, key) => {
@@ -134,9 +139,9 @@ export function App() {
           <Route key={key} exact path={'/' + prodCat + '/' + prodName.replaceAll(' ', '%20') + id} element={
             <>
               <Navbar />
-              <ProductPage id={id} name={prodName} desc={prodDesc} price={price} img={prodImg} catName={prodCat} inventory={inventory} />
+              <ProductPage id={id} name={prodName} desc={prodDesc} price={price} img={prodImg} catName={prodCat} inventory={inventory} refreshSideCart={resetSideCart}/>
               <Footer />
-              <SideCart />
+              <SideCart resetSideCartCheck={resetSideCartCheck}/>
             </>
           } />
         )
@@ -154,7 +159,7 @@ export function App() {
           <Route exact path="/" element={
             <div>
               <Navbar />
-              {/* {displayCats(JSON.parse(sessionStorage.getItem("testArr")))} */}
+              {/* {displayCats(JSON.parse(localStorage.getItem("testArr")))} */}
               {products && products.length > 0 && <Category2 category={"OrangeMerchandise"} />}
               <Footer />
               <SideCart />
@@ -162,12 +167,12 @@ export function App() {
 
           } />
 
-          {displayLinksEdit(JSON.parse(sessionStorage.getItem("myCats")))}
-          {displayLinks(JSON.parse(sessionStorage.getItem("myCats")))}
+          {displayLinksEdit(JSON.parse(localStorage.getItem("myCats")))}
+          {displayLinks(JSON.parse(localStorage.getItem("myCats")))}
 
 
-          {displayLinksEditProd(JSON.parse(sessionStorage.getItem("myProds")))}
-          {displayLinksProd(JSON.parse(sessionStorage.getItem("myProds")))}
+          {displayLinksEditProd(JSON.parse(localStorage.getItem("myProds")))}
+          {displayLinksProd(JSON.parse(localStorage.getItem("myProds")))}
 
           <Route exact path='/backend/add-cat' element={
             <>

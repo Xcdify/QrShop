@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useQRCode } from 'next-qrcode';
-import {apiUrl} from './helpers/index';
+import { apiUrl } from './helpers/index';
 
-function SideCart() {
-      
+function SideCart({ resetSideCartCheck }) {
+
     const { Canvas } = useQRCode();
 
     const [total, setTotal] = useState(0);
@@ -18,31 +18,54 @@ function SideCart() {
     useEffect(() => {
         return () => {
             const setValues = async () => {
-            try {
-                const cartId = await sessionStorage.getItem("cartId");
-                if(cartId){
-                    setCartId(cartId)
-                    const response = await axios.get(`${apiUrl}/cart/${cartId}`);
-                    setCart(response.data);
-                    if(response.data.products.length === 0){
-                        sessionStorage.removeItem("cartId")
-                        setCartId(null);
+                try {
+                    const cartId = await localStorage.getItem("cartId");
+                    if (cartId) {
+                        setCartId(cartId)
+                        const response = await axios.get(`${apiUrl}/cart/${cartId}`);
+                        setCart(response.data);
+                        if (response.data.products.length === 0) {
+                            localStorage.removeItem("cartId")
+                            setCartId(null);
+                        }
                     }
                 }
-            }
-            catch (err) {
-                console.log(err)
-            }
+                catch (err) {
+                    console.log(err)
+                }
             }
             setValues();
         }
-      }, [])
+    }, [resetSideCartCheck])
+
+    useEffect(() => {
+        return () => {
+            const setValues = async () => {
+                try {
+                    const cartId = await localStorage.getItem("cartId");
+                    if (cartId) {
+                        setCartId(cartId)
+                        const response = await axios.get(`${apiUrl}/cart/${cartId}`);
+                        setCart(response.data);
+                        if (response.data.products.length === 0) {
+                            localStorage.removeItem("cartId")
+                            setCartId(null);
+                        }
+                    }
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            setValues();
+        }
+    }, [])
 
     const getCartData = async () => {
         const response = await axios.get(`${apiUrl}/cart/${cartId}`);
         setCart(response.data);
-        if(response.data.products.length === 0){
-            sessionStorage.removeItem("cartId")
+        if (response.data.products.length === 0) {
+            localStorage.removeItem("cartId")
             setCartId(null);
         }
     }
@@ -51,9 +74,9 @@ function SideCart() {
         return <img className="mw-100" width={50} height={50} alt="test" src={`data:image/png;base64,${data}`} />
     }
 
-    function getSum(cart){
-        var sum = cart.reduce(function(_this, val) {
-            return _this + val.amount*+val.productPrice
+    function getSum(cart) {
+        var sum = cart.reduce(function (_this, val) {
+            return _this + val.amount * +val.productPrice
         }, 0);
         setTotal(sum);
     }
@@ -72,8 +95,8 @@ function SideCart() {
                 }
                 setCart([...cart])
                 getSum(cart);
-                sessionStorage.setItem("myCart", JSON.stringify(cart));
-                window.location.reload()
+                localStorage.setItem("myCart", JSON.stringify(cart));
+                //window.location.reload()
                 break
             }
         }
@@ -81,8 +104,8 @@ function SideCart() {
 
     async function removeItem(productId) {
         try {
-            const cartId = await sessionStorage.getItem("cartId");
-            if(cartId && productId){
+            const cartId = await localStorage.getItem("cartId");
+            if (cartId && productId) {
                 await axios.delete(`${apiUrl}/cart/${cartId}/product/${productId}`);
                 getCartData();
             }
@@ -90,7 +113,7 @@ function SideCart() {
         catch (err) {
             console.log(err)
         }
-        window.location.reload()
+        //window.location.reload()
     }
 
 
@@ -111,7 +134,7 @@ function SideCart() {
                                     <div className="flow-root">
                                         <ul role="list" className="-my-6 divide-y divide-gray-200">
                                             {cart && cart.products.map((car, key) => {
-                                                return <li key = {key} className="flex py-6">
+                                                return <li key={key} className="flex py-6">
                                                     <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                         <img src={`data:image/png;base64,${car.prodImg}`} alt={''} className="h-full w-full object-cover object-center" />
                                                     </div>
@@ -134,7 +157,7 @@ function SideCart() {
                                                     </div>
                                                 </li>
                                             })}
-                                            {cart.length == 0 && 
+                                            {cart.length == 0 &&
                                                 <div className="flex h-96 justify-center self-center content-center items-center">
                                                     <p className="text-slate-400">No products</p>
                                                 </div>
@@ -160,8 +183,8 @@ function SideCart() {
                                             scale: 4,
                                             width: 180,
                                             color: {
-                                            dark: '#000',
-                                            light: '#f16e00',
+                                                dark: '#000',
+                                                light: '#f16e00',
                                             },
                                         }}
                                     />

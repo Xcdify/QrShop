@@ -403,5 +403,16 @@ server.delete('/cart/:cartId/product/:productId', async (req, res) => {
     }
 })
 
+server.delete('/cart/:cartId/clear', async (req, res) => {
+    const { cartId } = req.params
+    try {
+        await db('cart_products').where({ cartId: cartId }).del()
+        await db('carts').where({ id: cartId }).del()
+        res.status(200).json({ server: 'Cart successfully deleted' })
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 
 server.listen(PORT, () => console.log('server is running at port: ' + PORT))

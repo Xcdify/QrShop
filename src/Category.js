@@ -21,7 +21,7 @@ function Category({ id, name, desc, color, img1, img2, img3 }) {
         }
         return <p className="text-center"> Loading ...</p>
     }
-    var products = JSON.parse(sessionStorage.getItem("myProds"));
+    var products = JSON.parse(localStorage.getItem("myProds"));
 
 
     for(var i = 0; i < products.length ;i++){

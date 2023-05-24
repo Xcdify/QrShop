@@ -75,14 +75,14 @@ function Category2({ category }) {
         return (temp)
     }
 
-    if (!(JSON.parse(sessionStorage.getItem("filter")))) {
+    if (!(JSON.parse(localStorage.getItem("filter")))) {
         filter = 0
     } else {
-        var filter = JSON.parse(sessionStorage.getItem("filter"));
+        var filter = JSON.parse(localStorage.getItem("filter"));
     }
 
  
-    var myProds = JSON.parse(sessionStorage.getItem("myProds"));
+    var myProds = JSON.parse(localStorage.getItem("myProds"));
     var products = [];
     for(var i = 0; i < myProds.length;i++){
         if( myProds[i].prodCat === category){
@@ -128,7 +128,7 @@ function Category2({ category }) {
     }
 
     const handleChange = (e) => {
-        sessionStorage.setItem("filter", JSON.stringify(e.target.value))
+        localStorage.setItem("filter", JSON.stringify(e.target.value))
         //window.location.reload()
     }
 
@@ -155,7 +155,7 @@ function Category2({ category }) {
                 </div>
                 <div className="row">
                     <div className="col-2 d-lg-block d-none">
-                        {displayCats(JSON.parse(sessionStorage.getItem("myCats")))}
+                        {displayCats(JSON.parse(localStorage.getItem("myCats")))}
                     </div>
 
                     <Category1 category={category} products={products}></Category1>

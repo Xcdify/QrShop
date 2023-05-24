@@ -8,7 +8,7 @@ import axios from "axios";
 import SideCart from './SideCart'
 import {apiUrl} from './helpers/index';
 
-function ProductPage({ id, name, desc, price, img, catName, inventory }) {
+function ProductPage({ id, name, desc, price, img, catName, inventory, refreshSideCart }) {
 
   const search = window.location.search;
   const params = new URLSearchParams(search);
@@ -25,16 +25,21 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
     return () => {
       const setValues = async () => {
         try {
+          let cartInfo = {
+            products: [],
+            subtotal: 0
+          }
           console.log(name, window.location.pathname)
-          const cartId = await sessionStorage.getItem("cartId");
+          const cartId = await localStorage.getItem("cartId");
           if(cartId){
               setCartId(cartId);
               const response = await axios.get(`${apiUrl}/cart/${cartId}`);
+              cartInfo = response.data;
               setCart(response.data);
           }
           setFromQr(fromQrInfo)
           if(fromQrInfo == "true"){
-            handleCart("once");
+            handleCart("once", cartInfo);
           }
         }
         catch (err) {
@@ -49,15 +54,13 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
     return <img className="mw-100" width={1000} height={600} alt="test" src={`data:image/png;base64,${data}`} />
   }
 
-  const handleCart = async (type) => {
+  const handleCart = async (type, cart) => {
     if (cart.products.length > 0) {
       const productIndex = cart.products.findIndex((product) => {
         return product.productId === id
       })
       if(productIndex >= 0){
-        if (type !== "once") {
-          cart.products[productIndex].quantity++;
-        }
+        cart.products[productIndex].quantity++;
       }else{
         var product = {
           productId: id,
@@ -69,8 +72,10 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
       }
       try {
         cart.subtotal = getSum(cart.products)
-        let response = await axios.put(`${apiUrl}/cart/${cartId}`, cart)
-        console.log(response)
+        let response = await axios.put(`${apiUrl}/cart/${cartId ? cartId : cart.id}`, cart)
+        const cartResponse = await axios.get(`${apiUrl}/cart/${cartId}`);
+        setCart(cartResponse.data);
+        refreshSideCart();
       }
       catch (err) {
         console.log(err)
@@ -88,15 +93,17 @@ function ProductPage({ id, name, desc, price, img, catName, inventory }) {
       }
       try {
         let response = await axios.post(`${apiUrl}/postCart`, cart)
-        console.log(response)
-        sessionStorage.setItem("cartId", response.data.cartId);
+        localStorage.setItem("cartId", response.data.cartId);
+        const cartResponse = await axios.get(`${apiUrl}/cart/${cartId}`);
+        setCart(cartResponse.data);
+        refreshSideCart();
       }
       catch (err) {
         console.log(err)
       }
     }
     if (type !== "once") {
-      window.location.reload()
+      refreshSideCart();
     }
   }
 
