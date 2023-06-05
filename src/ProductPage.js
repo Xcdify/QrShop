@@ -30,7 +30,8 @@ function ProductPage({ id, name, desc, price, img, catName, inventory, refreshSi
             subtotal: 0
           }
           console.log(name, window.location.pathname)
-          const cartId = await localStorage.getItem("cartId");
+          const cartIdResponse = await axios.get(`${apiUrl}/get-cart-id`);
+          const cartId = cartIdResponse.data.id;
           if(cartId){
               setCartId(cartId);
               const response = await axios.get(`${apiUrl}/cart/${cartId}`);
@@ -93,7 +94,6 @@ function ProductPage({ id, name, desc, price, img, catName, inventory, refreshSi
       }
       try {
         let response = await axios.post(`${apiUrl}/postCart`, cart)
-        localStorage.setItem("cartId", response.data.cartId);
         const cartResponse = await axios.get(`${apiUrl}/cart/${cartId}`);
         setCart(cartResponse.data);
         refreshSideCart();

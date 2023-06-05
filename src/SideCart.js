@@ -19,14 +19,15 @@ function SideCart({ resetSideCartCheck }) {
         return () => {
             const setValues = async () => {
                 try {
-                    const cartId = await localStorage.getItem("cartId");
+                    const cartIdResponse = await axios.get(`${apiUrl}/get-cart-id`);
+                    const cartId = cartIdResponse.data.id;
                     if (cartId) {
                         setCartId(cartId)
                         const response = await axios.get(`${apiUrl}/cart/${cartId}`);
                         setCart(response.data);
                         if (response.data.products.length === 0) {
-                            localStorage.removeItem("cartId")
                             setCartId(null);
+                            await axios.delete(`${apiUrl}/cart/clear`);
                         }
                     }
                 }
@@ -42,14 +43,15 @@ function SideCart({ resetSideCartCheck }) {
         return () => {
             const setValues = async () => {
                 try {
-                    const cartId = await localStorage.getItem("cartId");
+                    const cartIdResponse = await axios.get(`${apiUrl}/get-cart-id`);
+                    const cartId = cartIdResponse.data.id;
                     if (cartId) {
                         setCartId(cartId)
                         const response = await axios.get(`${apiUrl}/cart/${cartId}`);
                         setCart(response.data);
                         if (response.data.products.length === 0) {
-                            localStorage.removeItem("cartId")
                             setCartId(null);
+                            await axios.delete(`${apiUrl}/cart/clear`);
                         }
                     }
                 }
@@ -65,8 +67,8 @@ function SideCart({ resetSideCartCheck }) {
         const response = await axios.get(`${apiUrl}/cart/${cartId}`);
         setCart(response.data);
         if (response.data.products.length === 0) {
-            localStorage.removeItem("cartId")
             setCartId(null);
+            await axios.delete(`${apiUrl}/cart/clear`);
         }
     }
 
@@ -104,7 +106,8 @@ function SideCart({ resetSideCartCheck }) {
 
     async function removeItem(productId) {
         try {
-            const cartId = await localStorage.getItem("cartId");
+            const cartIdResponse = await axios.get(`${apiUrl}/get-cart-id`);
+            const cartId = cartIdResponse.data.id;
             if (cartId && productId) {
                 await axios.delete(`${apiUrl}/cart/${cartId}/product/${productId}`);
                 getCartData();

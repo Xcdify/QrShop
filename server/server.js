@@ -8,7 +8,8 @@ const db = require('./dbConfig')
 const uuid = require('uuid')
 const session = require('express-session')
 const store = new session.MemoryStore()
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const { AsyncResource } = require('async_hooks');
 
 server.use(session({
     secret: 'secret-key',
@@ -288,6 +289,25 @@ server.get('/getCart', async (req, res) => {
     }
 })
 
+server.get('/get-cart-id', async (req, res) => {
+    try {
+        const carts = await db('carts')
+        if(carts.length > 0){
+            const cart = await db('carts').first();
+            res.status(200).json({id: cart.id})
+        }else{
+            res.status(200).json(
+                {
+                    products: [],
+                    subtotal: 0
+                }
+            )
+        }
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 server.get('/cart/:id', async (req, res) => {
     const { id } = req.params
     try {
@@ -403,11 +423,21 @@ server.delete('/cart/:cartId/product/:productId', async (req, res) => {
     }
 })
 
-server.delete('/cart/:cartId/clear', async (req, res) => {
-    const { cartId } = req.params
+server.delete('/cart/clear', async (req, res) => {
     try {
-        await db('cart_products').where({ cartId: cartId }).del()
-        await db('carts').where({ id: cartId }).del()
+        const carts = await db('carts')
+        if(carts.length > 0){
+            const cart = await db('carts').first();
+            const cart_products = await db('cart_products').where({ cartId: cart.id });
+            cart_products.forEach(async (cart_product) => {
+                const oldProd = await db('products').where({ id: cart_product.productId }).first()
+                await db('products').where({ id: cart_product.productId }).update({
+                    inventory: oldProd.inventory-cart_product.quantity
+                })
+            })
+            await db('cart_products').del()
+            await db('carts').del()
+        }
         res.status(200).json({ server: 'Cart successfully deleted' })
     } catch (err) {
         console.log(err)
